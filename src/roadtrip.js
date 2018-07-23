@@ -36,6 +36,28 @@ const roadtrip = {
 			location.href :
 			options.fallback;
 
+		if (options.silent) {
+			let newData;
+			let newRoute;
+			
+			// hack to set the current route without transition delay
+			const target = _target = {
+				href
+			};
+			
+			for ( let i = 0; i < routes.length; i += 1 ) {
+				const route = routes[i];
+				newData = route.exec( target , true );
+		
+				if ( newData ) {
+					newRoute = route;
+					break;
+				}
+			}
+			currentRoute = newRoute;
+			
+		}
+		
 		return roadtrip.goto( href, {
 			replaceState: true,
 			scrollX: window.scrollX,
