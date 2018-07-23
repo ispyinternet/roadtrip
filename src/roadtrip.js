@@ -67,7 +67,7 @@ const roadtrip = {
 			return promise;
 		}
 
-		_goto( target );
+		_goto( target , options.hash);
 		return promise;
 	}
 };
@@ -92,15 +92,31 @@ if ( window ) {
 		_goto( _target );
 		currentID = event.state.uid;
 	}, false );
+	
+	// watch hash history
+	window.addEventListener( 'hashchange', () => {
+
+		_target = {
+			href: location.href,
+			scrollX: scroll.x,
+			scrollY: scroll.y,
+			popstate: true, // so we know not to manipulate the history
+			fulfil: noop,
+			reject: noop
+		};
+
+		_goto( _target, true );
+		
+	}, false );
 }
 
-function _goto ( target ) {
+function _goto ( target , hash = false) {
 	let newRoute;
 	let newData;
 
 	for ( let i = 0; i < routes.length; i += 1 ) {
 		const route = routes[i];
-		newData = route.exec( target );
+		newData = route.exec( target , hash);
 
 		if ( newData ) {
 			newRoute = route;

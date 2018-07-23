@@ -27,6 +27,7 @@ RouteData.prototype = {
 };
 
 export default function Route ( path, options ) {
+
 	// strip leading slash
 	if ( path[0] === '/' ) {
 		path = path.slice( 1 );
@@ -68,16 +69,20 @@ Route.prototype = {
 		return segmentsMatch( segments, this.segments );
 	},
 
-	exec ( target ) {
+	exec ( target , hash) {
 		a.href = target.href;
 
 		const pathname = a.pathname.indexOf( '/' ) === 0 ? 
 			a.pathname.slice( 1 ) :
 			a.pathname;
+		
 		const search = a.search.slice( 1 );
 
 		const segments = pathname.split( '/' );
 
+		// add the hash to the search
+		hash ? segments.push(segments.pop() + a.hash) : '';
+		
 		if ( segments.length !== this.segments.length ) {
 			return false;
 		}
